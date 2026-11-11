@@ -1,7 +1,61 @@
 @import "tailwindcss";
 
+/*
+ * Design system — one place for every colour, radius and font.
+ * Components use these tokens (bg-surface, text-ink-muted, border-line, …)
+ * and the default Tailwind spacing scale (4px steps). No ad-hoc hex values elsewhere.
+ *
+ * Type scale (used consistently):
+ *   page title  text-3xl/4xl bold      section title text-xl semibold
+ *   tile value  text-4xl bold          tile label    text-sm semibold uppercase
+ *   body/caption text-sm
+ *
+ * Contrast (WCAG AA ≥ 4.5:1) of every text/background pair was checked, see README.
+ */
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Neutral surfaces */
+  --color-canvas: #0b1220;
+  --color-surface: #111a2e;
+  --color-surface-raised: #18233b;
+  --color-line: #2f3b57;
+
+  /* Text */
+  --color-ink: #e5e7eb;
+  --color-ink-muted: #a8b3c7;
+
+  /* Accent + keyboard focus */
+  --color-brand: #22d3ee;
+  --color-focus: #67e8f9;
+
+  /* Status: ok / warn / crit — each with a tinted surface; never colour alone (icon + word too) */
+  --color-ok: #4ade80;
+  --color-ok-surface: #0f2a1d;
+  --color-warn: #fbbf24;
+  --color-warn-surface: #33260a;
+  --color-crit: #f87171;
+  --color-crit-ink: #fca5a5;
+  --color-crit-surface: #3b1219;
+  --color-on-crit: #1c0509;
+
+  --radius-card: 1rem;
+}
+
+:root {
+  color-scheme: dark;
+}
+
 body {
-  background: #0b1220;
-  color: #e5e7eb;
-  font-family: system-ui, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Visible keyboard focus for every interactive element (WCAG 2.4.7). */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+  border-radius: 0.5rem;
 }
