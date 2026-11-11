@@ -1,18 +1,40 @@
-// A reusable dashboard tile.
-// Its props are typed, so the editor warns us if a value is missing or has the wrong type.
+import type { System } from "@/data/systems";
+import { describeLimits, formatValue } from "@/lib/format";
+import type { Status } from "@/lib/status";
+import StatusBadge from "./StatusBadge";
+import { describeStatus } from "./statusPresentation";
+
+// A system plus its derived status. The status is computed (lib/status.ts), never stored.
+export type EvaluatedSystem = System & { status: Status };
+
 type TileProps = {
-  title: string;
-  value: number;
-  unit: string;
+  system: EvaluatedSystem;
 };
 
-export default function Tile({ title, value, unit }: TileProps) {
+export default function Tile({ system }: TileProps) {
+  const { id, title, value, unit, limits, status } = system;
+  const presentation = describeStatus(status);
+  const limitsText = describeLimits(limits, unit);
+  const headingId = `tile-${id}`;
+
   return (
-    <div className="rounded-xl bg-slate-800 p-5 shadow-lg">
-      <h3 className="text-sm font-medium text-slate-400">{title}</h3>
-      <p className="mt-2 text-3xl font-bold text-white">
-        {value} <span className="text-lg font-normal text-slate-400">{unit}</span>
+    <article
+      aria-labelledby={headingId}
+      className={`flex h-full flex-col gap-4 rounded-card border p-6 ${presentation.card}`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <h3 id={headingId} className="text-sm font-semibold uppercase tracking-wider text-ink-muted">
+          {title}
+        </h3>
+        <StatusBadge status={status} />
+      </div>
+
+      <p className={`text-4xl font-bold tabular-nums ${presentation.value}`}>
+        {formatValue(value)}{" "}
+        <span className="text-base font-medium text-ink-muted">{unit}</span>
       </p>
-    </div>
+
+      {limitsText && <p className="mt-auto text-sm text-ink-muted">{limitsText}</p>}
+    </article>
   );
 }
